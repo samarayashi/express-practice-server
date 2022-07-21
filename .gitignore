@@ -1,0 +1,15 @@
+
+.idea/
+node_modules/
+
+client/public/bundlefiles/
+logs/
+
+.DS_Store
+.env
+launch.json
+*.log
+package-lock.json
+*.lock
+
+apidoc/

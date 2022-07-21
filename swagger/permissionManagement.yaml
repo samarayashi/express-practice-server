@@ -1,0 +1,71 @@
+openapi: '3.0.3'
+info:
+  title: API Title
+  version: '1.0'
+paths:
+  /api/student/find:
+    get:
+      tags:
+        - 測試server
+      summary: 利用id尋找學生
+      parameters:
+        - name: id
+          in: query
+          description: 尋找學生
+          required: true
+          schema:
+            type: string
+          example: A 
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: string
+                description: 學生
+                example: studentＡ
+        400:
+          description: 參數錯誤
+
+  /api/common/login:
+    post:
+      tags:
+        - 測試server
+      summary: 登入
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: 使用者名稱
+                  example: "Tony"
+                password:
+                  type: string
+                  description: 密碼
+                  example: "iamironman"
+      responses:
+        200:
+          description: ok
+        401:
+          description: 無權限
+        500:
+          description: 未知錯誤
+
+  /api/manager/showAll:
+    post:
+      tags:
+        - 測試server
+      summary: 顯示所有manager(受登入保護)
+      responses:
+        200:
+          description: ok
+        401:
+          description: 無權限
+        500:
+          description: 未知錯誤
+  
