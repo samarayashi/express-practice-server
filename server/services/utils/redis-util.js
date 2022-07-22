@@ -29,12 +29,11 @@ const createClient = (connectOptions, nickName) => {
     tmpClient.on('close', function (err) {
         if (err) {
             winston.error(
-                tmpClient.serverInfo.connected_clients, had_error
+                'close event', err
             );
         } else {
             winston.info(
-                'established Redis server connection has closed, connected_clients:',
-                tmpClient.serverInfo.connected_clients
+                'established Redis server connection has closed'
             );
         }
     });

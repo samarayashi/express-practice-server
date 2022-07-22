@@ -1,20 +1,23 @@
-// require web server
+// web server
 const express = require('express');
 
-// require third party server middleware
+// third party server middleware
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 
-// require other third party
+// other third party usage
 const passport = require('passport');
 
 // self create utils
 const RedisUtils = require('./services/utils/redis-util');
 
-// constant, envConfig
-const env = require('../envConfig');
+// config local env
+result = require('dotenv').config({path: __dirname + '/../.env'});
+const envUtil = require('./services/utils/env-util')
+const envCache =  envUtil.envCache;
+envUtil.infoEnvVar()
 
 const httpServer = express();
 const port = 3000;
@@ -26,7 +29,11 @@ httpServer.use(bodyParser.urlencoded({extended: true}));
 httpServer.use(cookieParser());
 
 // session store
-const RedisSessionClient = RedisUtils.createClient(env.redisConfigs, 'RedisSessionClient');
+const redisConfigs = {
+  port: envCache.testRedisPort,
+  host: envCache.testRedishost
+}
+const RedisSessionClient = RedisUtils.createClient(redisConfigs, 'RedisSessionClient');
 
 httpServer.use(
     session({
