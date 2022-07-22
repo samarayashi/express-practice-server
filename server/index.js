@@ -16,8 +16,8 @@ const RedisUtils = require('./services/utils/redis-util');
 // config local env
 result = require('dotenv').config({path: __dirname + '/../.env'});
 const envUtil = require('./services/utils/env-util')
-const envCache =  envUtil.envCache;
-envUtil.infoEnvVar()
+const envCache =  envUtil.envCache();
+envUtil.infoEnvVar(envCache)
 
 const httpServer = express();
 const port = 3000;
@@ -30,8 +30,8 @@ httpServer.use(cookieParser());
 
 // session store
 const redisConfigs = {
-  port: envCache.testRedisPort,
-  host: envCache.testRedishost
+  port: envCache.REDIS_PORT,
+  host: envCache.REDIS_HOST
 }
 const RedisSessionClient = RedisUtils.createClient(redisConfigs, 'RedisSessionClient');
 
