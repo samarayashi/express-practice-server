@@ -1,29 +1,41 @@
+// require web server
+const express = require('express');
 
-
-// request middleware
+// require third party server middleware
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-
-// web server
-const express = require('express');
-const passport = require('passport');
 const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
 
+// require other third party
+const passport = require('passport');
 
-const httpServer = express()
-const port = 3000
+// self create utils
+const RedisUtils = require('./services/utils/redis-util');
+
+// constant, envConfig
+const env = require('../envConfig');
+
+const httpServer = express();
+const port = 3000;
 
 
 // middleware hooking
 httpServer.use(bodyParser.json());
-httpServer.use(bodyParser.urlencoded({ extended: true }));
+httpServer.use(bodyParser.urlencoded({extended: true}));
 httpServer.use(cookieParser());
 
-//session store
-//skip redis part 
+// session store
+const RedisSessionClient = RedisUtils.createClient(env.redisConfigs, 'RedisSessionClient');
+
 httpServer.use(
     session({
-        // store: maybe will store in redis,
+        store: new RedisStore({
+          client: RedisSessionClient,
+          ttl: 4 * 3600,
+          prefix: 'practice-server',
+          disableTouch: true
+        }),
         // genid: now use default method to generate sid
         secret: 'mySecret',
         resave: false, // 不太理解先隨便設
