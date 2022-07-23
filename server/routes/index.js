@@ -1,3 +1,4 @@
+logger = require('../services/utils/winston-util').logger;
 const API_ROUTES = [
     { route: '/demo', apiFile: './demo/api' },
     { route: '/manager', apiFile: './manager/api' },
@@ -8,8 +9,8 @@ const API_ROUTES = [
 
 function hookAllApi(httpServer){
     httpServer.use(`/api`, function(req, res, next){
-        console.log('welcome api layer');
-        console.log('you request for' + req.originalUrl)
+        logger.debug('welcome api layer');
+        logger.debug('you request for' + req.originalUrl)
         next()
     });
     API_ROUTES.forEach((routeObj) => {

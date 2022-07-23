@@ -1,4 +1,4 @@
-const winston = require('winston');
+const logger = require('../../services/utils/winston-util').logger;
 const managerService = require('../../services/manager-service');
 const Auth = require('../../middlewares/signin-checker');
 
@@ -15,7 +15,7 @@ module.exports = (httpServer) => {
             managers = await managerService.getAll()
             return res.status(200).json({code: 200, data: managers});
         } catch(err) {
-            winston.error('test unexpected error, ', err);
+            logger.error('test unexpected error, ', err);
             return res.status(500).json({code: 500, message: 'unexpected error'});
         }
     });
@@ -26,7 +26,7 @@ module.exports = (httpServer) => {
             manager = await managerService.find(managerId)
             return res.status(200).json({code: 200, data: manager});
         } catch(err) {
-            winston.error('test unexpected error, ', err);
+            logger.error('test unexpected error, ', err);
             return res.status(500).json({code: 500, message: 'unexpected error'});
         }
     });

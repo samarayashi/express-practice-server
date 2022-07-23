@@ -1,5 +1,5 @@
 const Redis = require('ioredis');
-const winston = require('winston');
+const logger = require('./winston-util.js').logger;
 
 
 
@@ -8,37 +8,37 @@ const createClient = (connectOptions, nickName) => {
     tmpClient.nickName = nickName;
     
     tmpClient.on('connect', function(){
-        winston.info(`create Redis client ${nickName}`);
+        logger.info(`create Redis client ${nickName}`);
     });
 
     tmpClient.on('error', function(err){
-        winston.error(`self redis connection down, nickName: ${nickName};`, err);
+        logger.error(`self redis connection down, nickName: ${nickName};`, err);
     });
 
     tmpClient.on('ready', function () {
-        winston.info(
+        logger.info(
             `connection ready, nickName: ${nickName};`
         );
     });
     tmpClient.on('end', function () {
-        winston.info(
+        logger.info(
             `self redis connection end. nickName: ${nickName}`
         );
     });
 
     tmpClient.on('close', function (err) {
         if (err) {
-            winston.error(
+            logger.error(
                 'close event', err
             );
         } else {
-            winston.info(
+            logger.info(
                 'established Redis server connection has closed'
             );
         }
     });
     tmpClient.on('reconnecting', (err) => {
-        winston.info(
+        logger.info(
             `self redis connection reconnecting.....  nickName: ${nickName}`,
             err
         );

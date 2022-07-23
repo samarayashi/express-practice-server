@@ -1,5 +1,5 @@
 'use strict';
-const winston = require('winston');
+const logger = require('../../services/utils/winston-util').logger;
 const passport = require('passport');
 const Auth = require('../../middlewares/signin-checker');
 // const redisUtil = require('../../services/utils/redis-util');
@@ -23,7 +23,7 @@ module.exports = (httpServer) => {
   router.post('/login', (req, res) => {
     passport.authenticate('fakeDBUserCheck', function(err, user, info) {
       if (err) {
-        winston.error('login failed with error : ', err);
+        logger.error('login failed with error : ', err);
         return res.status(err.code).json({code: err.code, message: err.message}).end();
       } else if (!user) {
         return res.status(401).json({code: 401, message: 'login failed, please check your username and password.'}).end();
@@ -49,12 +49,12 @@ module.exports = (httpServer) => {
   router.post('/login', (req, res, next) => {
     passport.authenticate('fakeDBUserCheck', function(err, user, info) {
       if (err) {
-        winston.error('login failed with error : ', err);
+        logger.error('login failed with error : ', err);
         return res.status(err.code).json({code: err.code, message: err.message}).end();
       } else if (!user) {
         return res.status(401).json({code: 401, message: 'login failed, please check your username and password.'}).end();
       } else {
-        console.log('login success')
+        logger.debug('login success')
         req.login(user, loginErr => {
           if (loginErr){
             return next(loginErr)

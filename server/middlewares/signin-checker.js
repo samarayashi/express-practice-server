@@ -1,12 +1,12 @@
 'use strict';
-const winston = require('winston');
+const logger = require('../services/utils/winston-util').logger;
 const checker = {};
 
 
 const bs = function(req, res) {
     // 這邊不作補償登入, 不行就是不行, 不要幫忙登入
     // session check
-    console.log('驗證是否通過' + req.isAuthenticated());
+    logger.debug('驗證是否通過' + req.isAuthenticated());
     return req.isAuthenticated(); // true or false
 }
 
@@ -16,7 +16,7 @@ checker.pageCheckSignin = async (req, res, next) => {
     if(bs(req,res)) {
         return next();
     }else{
-        winston.info(`因為 bs() failed, 所以 redirect /${Constant.ROOTPATH}/signin`);
+        logger.info(`因為 bs() failed, 所以 redirect /${Constant.ROOTPATH}/signin`);
         return res.redirect(`/${Constant.ROOTPATH}/user/signin`);
     }
 }

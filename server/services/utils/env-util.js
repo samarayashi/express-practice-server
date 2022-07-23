@@ -1,12 +1,12 @@
-//[Notice] process.env is slow for calling, so we cache here
-//const winston: any = require('winston');
-const { func } = require('joi');
-var winston = require('winston');
+const logger = require('./winston-util.js').logger;
 
+// [Notice] process.env is slow for calling, so we cache here
+// 但是必要專案中許多地方仍然是利用process.env呼叫環境變數
 function getEnvCache(){
     let envCache
     if (process.env.NODE_ENV == 'develop'){
         envCache = {
+            NODE_ENV: 'develop',
             REDIS_PORT: process.env.TEST_REDIS_PORT,
             REDIS_HOST: process.env.TEST_REDIS_HOST,
             SESSION_SECRET_KEY: process.env.SESSION_SECRET_KEY
@@ -16,15 +16,15 @@ function getEnvCache(){
 }
 
 function infoEnvVar(envCache){
-    winston.info(`=====  process.env list =====`);
+    logger.info(`=====  process.env list =====`);
     for (let [key, value] of Object.entries(envCache)) {
         if (key.includes('KEY')) {
-            winston.info(`${key} : ${hideKey(value, 3)}`);
+            logger.info(`${key} : ${hideKey(value, 3)}`);
         } else {
-            winston.info(`${key} : ${value}`);
+            logger.info(`${key} : ${value}`);
         }
     }
-    winston.info(`=====  End of process.env list =====`);
+    logger.info(`=====  End of process.env list =====`);
     function hideKey(str, showWordLength) {
         if (str && str.length > showWordLength) {
             result = str.slice(-showWordLength).padStart(str.length, '*')

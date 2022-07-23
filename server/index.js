@@ -7,17 +7,20 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 
-// other third party usage
-const passport = require('passport');
-
-// self create utils
-const RedisUtils = require('./services/utils/redis-util');
-
 // config local env
 result = require('dotenv').config({path: __dirname + '/../.env'});
-const envUtil = require('./services/utils/env-util')
+const envUtil = require('./services/utils/env-util.js')
 const envCache =  envUtil.envCache();
 envUtil.infoEnvVar(envCache)
+
+// other third party usage
+const passport = require('passport');
+const logger = require('./services/utils/winston-util.js').logger;
+
+// self create utils
+const RedisUtils = require('./services/utils/redis-util.js');
+
+
 
 const httpServer = express();
 const port = 3000;
@@ -62,8 +65,8 @@ httpServer.get('/', (req, res) => {
   res.write('Hello express!\n');
   res.write('My session id: ' + req.sessionID);
   res.end()
-  console.log(`session object: ${JSON.stringify(req.session)}`)
-  console.log(req.sessionID) 
+  logger.debug(`session object: ${JSON.stringify(req.session)}`)
+  logger.debug(req.sessionID) 
 })
 
 //include APIs
@@ -73,5 +76,5 @@ require('./routes/index')(httpServer);
 require('./boot/swagger-spec')(httpServer);
 
 httpServer.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  logger.info(`Example app listening on port ${port}`)
 })

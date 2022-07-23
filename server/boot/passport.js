@@ -1,5 +1,5 @@
 const passport = require('passport');
-const winston = require('winston');
+const logger = require('../services/utils/winston-util').logger;
 const LocalStrategy = require('passport-local').Strategy;
 const _ = require('lodash')
 
@@ -42,7 +42,7 @@ module.exports = (httpServer) => {
                     }
                 }
                 catch (e) {
-                    winston.error(`${e.message}`);
+                    logger.error(`${e.message}`);
                     return done(e);
                 }
             }

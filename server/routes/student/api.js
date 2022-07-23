@@ -1,4 +1,4 @@
-const winston = require('winston');
+const logger = require('../../services/utils/winston-util').logger;
 const studentService = require('../../services/student-service');
 
 module.exports = (httpServer) => {
@@ -9,7 +9,7 @@ module.exports = (httpServer) => {
             students = await studentService.getAll()
             return res.status(200).json({code: 200, data: students});
         } catch(err) {
-            winston.error('test unexpected error, ', err);
+            logger.error('test unexpected error, ', err);
             return res.status(500).json({code: 500, message: 'unexpected error'});
         }
     });
@@ -20,7 +20,7 @@ module.exports = (httpServer) => {
             student = await studentService.find(studentId)
             return res.status(200).json({code: 200, data: student});
         } catch(err) {
-            winston.error('test unexpected error, ', err);
+            logger.error('test unexpected error, ', err);
             return res.status(500).json({code: 500, message: 'unexpected error'});
         }
     });
