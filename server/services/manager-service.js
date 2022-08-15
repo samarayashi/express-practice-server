@@ -1,17 +1,14 @@
-const DB = require('../../fakeDBData')
+const {db, models} = require('../rds/db-index')
 
-const ManagerService = {};
-ManagerService.getAll = async () => {
-    return DB.managers
+const teacherService = {};
+
+teacherService.getAll = async () => {
+    return await models.teacher.findAll()
 };
 
-ManagerService.find = async (studentId) =>{
-    for (const student of DB.managers) {
-        if (student.slice(7) == studentId){
-            return student
-            }
-        } 
+teacherService.find = async (student_id) =>{
+    return await models.teacher.findOne({student_id})
 };
 
 
-module.exports = ManagerService;
+module.exports = teacherService;

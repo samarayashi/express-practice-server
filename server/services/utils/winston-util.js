@@ -1,6 +1,6 @@
 'use strict';
 const winston = require('winston');
-const { colorize, combine, timestamp, align, printf} = winston.format;
+const {combine, colorize, timestamp, printf, errors, json} = winston.format;
 
 let loggerConfig = {}
 if (process.env.NODE_ENV === 'develop' || process.env.NODE_ENV === 'lab'){
@@ -17,13 +17,12 @@ if (process.env.NODE_ENV === 'develop' || process.env.NODE_ENV === 'lab'){
   loggerConfig.transports = [
     new winston.transports.Console()
   ]
-} else{
+} else {
   loggerConfig.level = 'info';
   loggerConfig.format = combine(
-    simple(),
     timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    colorize(),
-    align(),
+    errors({ stack: true }),
+    json()
   );
   loggerConfig.transports = [
     new winston.transports.File({ level: loggerConfig.level, filename: './logs/out.log' }),

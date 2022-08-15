@@ -1,7 +1,7 @@
 logger = require('../services/utils/winston-util').logger;
 const API_ROUTES = [
     { route: '/demo', apiFile: './demo/api' },
-    { route: '/manager', apiFile: './manager/api' },
+    { route: '/teacher', apiFile: './teacher/api' },
     { route: '/student', apiFile: './student/api' },
    { route: '/common', apiFile: './common/api' }
 ];

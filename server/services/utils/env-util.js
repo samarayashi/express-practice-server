@@ -1,40 +1,38 @@
+'use strict'
 const logger = require('./winston-util.js').logger;
 
-// [Notice] process.env is slow for calling, so we cache here
-// 但是必要專案中許多地方仍然是利用process.env呼叫環境變數
-function getEnvCache(){
-    let envCache
-    if (process.env.NODE_ENV == 'develop'){
-        envCache = {
-            NODE_ENV: 'develop',
-            REDIS_PORT: process.env.TEST_REDIS_PORT,
-            REDIS_HOST: process.env.TEST_REDIS_HOST,
-            SESSION_SECRET_KEY: process.env.SESSION_SECRET_KEY
-        }
-    };
-    return envCache
+let envNameList = [
+    'NODE_ENV',
+    'EXPRESS_PORT',
+    'TEST_REDIS_PORT',
+    'TEST_REDIS_HOST',
+    'MYSQL_HOST',
+    'MYSQL_DATABASE',
+    'MYSQL_ROOT_PASSWORD',
+    'SESSION_SECRET_KEY']
+
+function hideKey(str, showWordLength) {
+    if (str && str.length > showWordLength) {
+        let result = str.slice(-showWordLength).padStart(str.length, '*')
+        return result
+    } else {
+        return string
+    }
 }
 
-function infoEnvVar(envCache){
-    logger.info(`=====  process.env list =====`);
-    for (let [key, value] of Object.entries(envCache)) {
-        if (key.includes('KEY')) {
-            logger.info(`${key} : ${hideKey(value, 3)}`);
-        } else {
-            logger.info(`${key} : ${value}`);
+function infoEnvVars(varList=envNameList){
+    if (process.env.NODE_ENV == 'develop'){
+        logger.info(`=====  process.env list =====`);
+        for (let envName of varList) {
+            if (envName.includes('KEY')) {
+                logger.info(`${envName} : ${hideKey(process.env[envName], 3)}`);
+            } else {
+                logger.info(`${envName} : ${process.env[envName]}`);
+            }
         }
+        logger.info(`=====  End of process.env list =====`);
     }
-    logger.info(`=====  End of process.env list =====`);
-    function hideKey(str, showWordLength) {
-        if (str && str.length > showWordLength) {
-            result = str.slice(-showWordLength).padStart(str.length, '*')
-            return result
-        } else {
-            return string
-        }
-        }
-    };
+};
 
 
-module.exports = {envCache: getEnvCache,
-    infoEnvVar: infoEnvVar};
+module.exports = {infoEnvVars: infoEnvVars};

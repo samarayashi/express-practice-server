@@ -1,3 +1,6 @@
+//node
+const fs = require('fs');
+
 // web server
 const express = require('express');
 
@@ -8,10 +11,13 @@ const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 
 // config local env
-result = require('dotenv').config({path: __dirname + '/../.env'});
-const envUtil = require('./services/utils/env-util.js')
-const envCache =  envUtil.envCache();
-envUtil.infoEnvVar(envCache)
+let envFilePath = __dirname + '/../.env';
+if (fs.existsSync(envFilePath)){
+ require('dotenv').config({path: envFilePath});
+}
+require('./services/utils/env-util.js').infoEnvVars()
+
+
 
 // other third party usage
 const passport = require('passport');
@@ -20,10 +26,14 @@ const logger = require('./services/utils/winston-util.js').logger;
 // self create utils
 const RedisUtils = require('./services/utils/redis-util.js');
 
+//DB instance
+(async function() {
+  await require('./rds/db-connector').func_ConnectDB();
+})();
 
 
 const httpServer = express();
-const port = 3000;
+const port = process.env.EXPRESS_PORT || 3000;
 
 
 // middleware hooking
@@ -33,8 +43,8 @@ httpServer.use(cookieParser());
 
 // session store
 const redisConfigs = {
-  port: envCache.REDIS_PORT,
-  host: envCache.REDIS_HOST
+  port: process.env.REDIS_PORT,
+  host: process.env.REDIS_HOST||'localhost'
 }
 const RedisSessionClient = RedisUtils.createClient(redisConfigs, 'RedisSessionClient');
 
@@ -75,6 +85,6 @@ require('./routes/index')(httpServer);
 //hook wagger page
 require('./boot/swagger-spec')(httpServer);
 
-httpServer.listen(port, () => {
+httpServer.listen(port, '0.0.0.0', () => {
   logger.info(`Example app listening on port ${port}`)
 })

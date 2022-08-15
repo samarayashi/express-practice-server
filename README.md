@@ -13,8 +13,11 @@ practice building server with nodejs-express.
 5. redis儲存session
 
 未實作
-1. sequlize連接DB並且和自動產生model，目前先以fakeDBData假設DB存在
+1. sequlize連接DB並且和自動產生model
+  1. 對於自動產生的model加上對於relationship的描述
 2. docker封裝DB環境，打整個開發環境打包設定好，達到開箱即用
+  1. 實踐dockerlize https://larrylu.blog/step-by-step-dockerize-your-app-ecd8940696f4
+3. bcrypt加密登入密碼
 
 前端頁面
 /explorer

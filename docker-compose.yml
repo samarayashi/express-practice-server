@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  rmdb:
+    image: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - "./datadir/:/var/lib/mysql"
+    ports:
+      - "${MYSQL_PORT}:3306"
+
+  redis:
+    image: redis
+    ports:
+    - ${REDIS_PORT}:6379
+
+  practice-server:
+    build: .
+    ports:
+    - ${EXPRESS_PORT}:${EXPRESS_PORT}
+    env_file:
+    - .env
+

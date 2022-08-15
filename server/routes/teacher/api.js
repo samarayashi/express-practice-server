@@ -7,7 +7,7 @@ module.exports = (httpServer) => {
     let router = require('express').Router();
     
     // router level middleware, check login 
-    router.use(Auth.apiCheckBS);
+    router.use(Auth.checkLogin);
 
     // api/manager/showAll
     router.post('/showAll', async (req, res) => {

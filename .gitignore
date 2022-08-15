@@ -13,3 +13,6 @@ package-lock.json
 *.lock
 
 apidoc/
+
+# mysql data in docker
+datadir/
